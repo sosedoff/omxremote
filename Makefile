@@ -5,7 +5,7 @@ setup:
 	go get
 
 release: clean
-	GOOS=linux GOARCH=arm go build omxremote.go
+	GOOS=linux GOARCH=arm go build
 
 clean:
 	rm -f ./omxremote
