@@ -64,7 +64,7 @@ func findFiles(path string) []string {
 
 	// Execute "find" without a pattern. Error checking is skipped since
 	// it could return a non-zero exit statuses in some cases.
-	out, _ := exec.Command("find", path).Output()
+	out, _ := exec.Command("find", path+"/").Output()
 
 	// Strip all space from output and split result into lines. One file per line.
 	buff := strings.TrimSpace(string(out))
