@@ -26,8 +26,8 @@ var (
 	Commands = map[string]string{
 		"pause":             "p",            // Pause/continue playback
 		"stop":              "q",            // Stop playback and exit
-		"volume_up":         "+",            // Increase volume by 3dB
-		"volume_down":       "-",            // Decreate volume by 3dB
+		"volume_up":         "+",            // Change volume by +3dB
+		"volume_down":       "-",            // Change volume by -3dB
 		"subtitles":         "s",            // Enable/disable subtitles
 		"seek_back":         "\x1b\x5b\x44", // Seek -30 seconds
 		"seek_back_fast":    "\x1b\x5b\x42", // Seek -600 second
