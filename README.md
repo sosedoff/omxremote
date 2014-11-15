@@ -61,7 +61,7 @@ To start omxremote, run the following command:
 omxremote /path/to/your/video/files
 ```
 
-Server will start on port 8080 and listening on all network interfaces. You can
+Server will start on port 8080 and listen on all network interfaces. You can
 connect to it if you have any device (laptop, phone) on the same wifi network. 
 
 ## License
