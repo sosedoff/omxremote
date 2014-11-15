@@ -32,7 +32,7 @@ No special permissions are required in order to play videos with `omxplayer` and
 
 ## Install
 
-TODO
+Use [Github Releases](https://github.com/sosedoff/omxremote/releases)
 
 ## Compile
 
