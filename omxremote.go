@@ -71,7 +71,7 @@ func findFiles(path string) []string {
 	lines := strings.Split(buff, "\n")
 
 	for _, line := range lines {
-		if Extensions.Match([]byte(line)) {
+		if omxCanPlay(line) {
 			results = append(results, line)
 		}
 	}
@@ -183,6 +183,15 @@ func omxIsActive() bool {
 	return Omx != nil
 }
 
+// Check if player can play the file
+func omxCanPlay(path string) bool {
+	if Extensions.Match([]byte(path)) {
+		return true
+	}
+
+	return false
+}
+
 func httpFiles(c *gin.Context) {
 	c.JSON(200, findFiles(MediaPath))
 }
@@ -215,6 +224,11 @@ func httpPlay(c *gin.Context) {
 
 	if !fileExists(file) {
 		c.JSON(400, Response{false, "File does not exist"})
+		return
+	}
+
+	if !omxCanPlay(file) {
+		c.JSON(400, Response{false, "File cannot be played"})
 		return
 	}
 
