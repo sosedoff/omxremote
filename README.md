@@ -34,6 +34,25 @@ No special permissions are required in order to play videos with `omxplayer` and
 
 TODO
 
+## Compile
+
+Compiling this project on RPi is a bit of a difficult task and does not necessarily makes
+sense since Go provides ability to cross-compile source code for multiple platforms on
+your local development environment. You can do that by following the steps:
+
+```
+make setup
+make release
+```
+
+That will produce a binary that's ready to be execute on your RPi. In cases if you dont have
+Make available on your system, you can execute the following commands:
+
+```
+go get
+GOOS=linux GOARCH=arm go build
+```
+
 ## Usage
 
 To start omxremote, run the following command:
