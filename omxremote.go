@@ -259,6 +259,9 @@ func main() {
 	// Start a remote command listener
 	go omxListen()
 
+	// Disable debugging mode
+	gin.SetMode("release")
+
 	// Setup HTTP server
 	router := gin.Default()
 
