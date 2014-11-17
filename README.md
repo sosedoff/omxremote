@@ -13,8 +13,8 @@ controlled via keyboard shortcuts and does not provide any way to control it rem
 To control omxplayer programmatically one has to attach to process' STDIN and send commands as 
 plaintext. 
 
-Omxremote project is an attempt to build a web frontent and singple API to control 
-video playback on a remote RPi device. Its built in Go, which has a capability to 
+Omxremote project is an attempt to build a web frontend and simple API to control 
+video playback on a remote RPi device. Its built in Go, which has provides capability to 
 cross-compile source code for ARM and as a result provides a single binary with 
 no external dependencies to be downloaded and installed on your RPi.
 
