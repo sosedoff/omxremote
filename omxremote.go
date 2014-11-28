@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
@@ -16,6 +17,11 @@ const VERSION = "0.1.0"
 type Response struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type Entry struct {
+	Filename string `json:"filename"`
+	IsDir    bool   `json:"directory"`
 }
 
 var (
@@ -57,26 +63,31 @@ func fileExists(path string) bool {
 	return err == nil
 }
 
-// Scan path for all matching video files and return string slice.
-// If nothing was found or an error occured it will return an empty slice.
-func findFiles(path string) []string {
-	results := []string{}
+// Scan given path for all directories and matching video files.
+// If nothing was found it will return an empty slice.
+func scanPath(path string) []Entry {
+	entries := make([]Entry, 0)
 
-	// Execute "find" without a pattern. Error checking is skipped since
-	// it could return a non-zero exit statuses in some cases.
-	out, _ := exec.Command("find", path+"/").Output()
-
-	// Strip all space from output and split result into lines. One file per line.
-	buff := strings.TrimSpace(string(out))
-	lines := strings.Split(buff, "\n")
-
-	for _, line := range lines {
-		if omxCanPlay(line) {
-			results = append(results, line)
-		}
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return entries
 	}
 
-	return results
+	for _, file := range files {
+		entry := Entry{
+			Filename: file.Name(),
+			IsDir:    file.IsDir(),
+		}
+
+		// Do not include non-video files in the list
+		if !file.IsDir() && !omxCanPlay(file.Name()) {
+			continue
+		}
+
+		entries = append(entries, entry)
+	}
+
+	return entries
 }
 
 // Determine the full path to omxplayer executable. Returns error if not found.
@@ -192,8 +203,16 @@ func omxCanPlay(path string) bool {
 	return false
 }
 
-func httpFiles(c *gin.Context) {
-	c.JSON(200, findFiles(MediaPath))
+func httpBrowse(c *gin.Context) {
+	path := c.Request.FormValue("path")
+
+	if path != "" {
+		path = fmt.Sprintf("%s/%s", MediaPath, path)
+	} else {
+		path = MediaPath
+	}
+
+	c.JSON(200, scanPath(path))
 }
 
 func httpCommand(c *gin.Context) {
@@ -280,7 +299,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/status", httpStatus)
-	router.GET("/files", httpFiles)
+	router.GET("/browse", httpBrowse)
 	router.GET("/play", httpPlay)
 	router.GET("/command/:command", httpCommand)
 
