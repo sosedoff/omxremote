@@ -285,6 +285,8 @@ func usage() {
 }
 
 func main() {
+	fmt.Printf("omxremote v%v\n", VERSION)
+
 	if len(os.Args) < 2 {
 		usage()
 	}
@@ -319,5 +321,6 @@ func main() {
 	router.GET("/play", httpPlay)
 	router.GET("/command/:command", httpCommand)
 
+	fmt.Println("Starting server on 0.0.0.0:8080")
 	router.Run(":8080")
 }
