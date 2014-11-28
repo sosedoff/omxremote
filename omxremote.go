@@ -22,7 +22,8 @@ type Response struct {
 
 type StatusResponse struct {
 	Running       bool   `json:"running"`      // True if player is running
-	CurrentFile   string `json:"current_file"` // Path to current media file
+	File          string `json:"file"`         // Path to current media file
+	Name          string `json:"name"`         // Titleized filename
 	MovieDbApiKey string `json:"tmdb_api_key"` // TheMovieDb API key
 }
 
@@ -317,7 +318,8 @@ func httpPlay(c *gin.Context) {
 func httpStatus(c *gin.Context) {
 	result := StatusResponse{
 		Running:       omxIsActive(),
-		CurrentFile:   CurrentFile,
+		File:          CurrentFile,
+		Name:          fileToTitle(filepath.Base(CurrentFile)),
 		MovieDbApiKey: movieDbApiKey(),
 	}
 
