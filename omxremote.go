@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -26,7 +27,13 @@ type FileEntry struct {
 
 var (
 	// Regular expression to match all supported video files
-	Extensions = regexp.MustCompile(".(avi|mpg|mov|flv|wmv|asf|mpeg|m4v|divx|mp4|mkv)$")
+	RegexFormats = regexp.MustCompile(`.(avi|mpg|mov|flv|wmv|asf|mpeg|m4v|divx|mp4|mkv)$`)
+
+	// Regular expression to convert filenames to titles
+	RegexBrackets = regexp.MustCompile(`[\(\[\]\)]`)
+	RegexYear     = regexp.MustCompile(`((19|20)[\d]{2})`)
+	RegexJunk     = regexp.MustCompile(`(?i)(1080p|720p|3d|brrip|bluray|webrip|x264|aac)`)
+	RegexSpace    = regexp.MustCompile(`\s{2,}`)
 
 	// OMXPlayer control commands, these are piped via STDIN to omxplayer process
 	Commands = map[string]string{
@@ -55,6 +62,9 @@ var (
 
 	// Channel to pass along commands to the player routine
 	Command chan string
+
+	// Currently playing media file name
+	CurrentFile string
 )
 
 // Returns true if specified file exists
@@ -88,6 +98,35 @@ func scanPath(path string) []FileEntry {
 	}
 
 	return entries
+}
+
+// Convert media filename to regular title
+func fileToTitle(name string) string {
+	// Remove file extension from name
+	name = strings.Replace(name, filepath.Ext(name), "", 1)
+
+	// Replace all dots with white space
+	name = strings.Replace(name, ".", " ", -1)
+
+	// Replace parenteses and brackets
+	name = RegexBrackets.ReplaceAllString(name, "")
+
+	// Check if name has a typical torrent format: "name year format etc"
+	pos := RegexYear.FindStringIndex(name)
+	if len(pos) > 0 {
+		name = name[0:pos[0]]
+	}
+
+	// Remove junk stuff
+	name = RegexJunk.ReplaceAllString(name, "")
+
+	// Remove any extra white space
+	name = RegexSpace.ReplaceAllString(name, "")
+
+	// Truncate space
+	name = strings.TrimSpace(name)
+
+	return name
 }
 
 // Determine the full path to omxplayer executable. Returns error if not found.
@@ -196,7 +235,7 @@ func omxIsActive() bool {
 
 // Check if player can play the file
 func omxCanPlay(path string) bool {
-	if Extensions.Match([]byte(path)) {
+	if RegexFormats.Match([]byte(path)) {
 		return true
 	}
 
