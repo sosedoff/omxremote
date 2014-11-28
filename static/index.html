@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>omxplayer</title>
+  </head>
+  <style>
+    html {
+      height: 100%;
+    }
+
+    body {
+      padding: 0px;
+      margin: 0px;
+      height: 100%;
+      font-family: Helvetica;
+    }
+
+    .button {
+      cursor: pointer;
+    }
+
+    .browse {
+      display: none;
+    }
+
+    .browse ul {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .browse ul li {
+      padding: 0px;
+      margin: 0px;
+      list-style-type: none;
+      list-style: none;
+      line-height: 1.5em;
+      border-bottom: 1px solid #ccc;
+      padding: 8px;
+    }
+
+    .browse ul li i {
+      color: #999;
+    }
+
+    .browse ul li a {
+      text-decoration: none;
+      color: #000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    .controls {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .controls i {
+      position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+    }
+
+    .controls .rewind {
+      position: fixed;
+      top: 0;
+      height: 20%;
+      width: 100%;
+    }
+
+    .controls .rewind .button {
+      position: relative;
+      width: 50%;
+      height: 100%;
+      float: left;
+      text-align: center;
+      font-size: 2em;
+      box-sizing: border-box;
+      border-bottom: 4px solid #eee;
+    }
+
+    .controls .rewind .backward-fast {
+      border-right: 2px solid #eee;
+    }
+
+    .controls .rewind .forward-fast {
+      border-left: 2px solid #eee;
+    }
+
+    .controls .volume {
+      position: fixed;
+      bottom: 0;
+      height: 20%;
+      width: 100%;
+    }
+
+    .controls .volume .button {
+      position: relative;
+      width: 50%;
+      height: 100%;
+      float: left;
+      text-align: center;
+      font-size: 3em;
+      box-sizing: border-box;
+      border-top: 4px solid #eee;
+    }
+
+    .controls .volume .volume-up {
+      border-left: 2px solid #eee;
+    }
+
+    .controls .volume .volume-down {
+      border-right: 2px solid #eee;
+    }
+
+    .controls .main {
+      position: fixed;
+      top: 20%;
+      bottom: 20%;
+      width: 100%;
+    }
+
+    .controls .main .play {
+      position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      height: auto;
+      width: 40%;
+      border-radius: 100%;
+      margin: 0 auto;
+      text-align: center; 
+      font-size: 4em;
+      box-shadow: inset 0 0 0 10px #ddd;
+    }
+
+    .controls .main .play:before {
+      display: block;
+      content: ' ';
+      padding-top: 100%;
+    }
+
+    .controls .main .backward {
+      position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(-215%, -50%);
+      height: auto;
+      width: 20%;
+      background: blue;
+      border-radius: 100%;
+      margin: 0 auto;
+      text-align: center; 
+      background: #eee;
+      font-size: 2em;
+    }
+
+    .controls .main .forward {
+      position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(115%, -50%);
+      height: auto;
+      width: 20%;
+      background: blue;
+      border-radius: 100%;
+      margin: 0 auto;
+      text-align: center; 
+      background: #eee;
+      font-size: 2em;
+    }
+
+    .controls .main .forward:before,
+    .controls .main .backward:before {
+      display: block;
+      content: ' ';
+      padding-top: 100%;
+    }
+
+    .controls .main .subtitles {
+      position: absolute;
+      top: 20px; right: 20px;
+      height: auto;
+      width: 20%;
+      margin: 0 auto;
+      text-align: center; 
+      font-size: 1.5em;
+      text-align: right;
+      color: #aaa;
+    }
+
+    .controls .main .stop {
+      position: absolute;
+      top: 20px; left: 20px;
+      height: auto;
+      width: 20%;
+      margin: 0 auto;
+      text-align: center; 
+      font-size: 1.5em;
+      text-align: left;
+      color: #aaa;
+    }
+
+  </style>
+  <body>
+    <div class="browse">
+      <ul></ul>
+    </div>
+
+    <div class="controls">
+      <div class="rewind">
+        <div class="button action backward-fast" data="seek_back_fast"><i class="fa fa-fast-backward"></i></div>
+        <div class="button action forward-fast" data="seek_forward_fast"><i class="fa fa-fast-forward"></i></div>       
+      </div>
+      <div class="main">
+        <div class="subtitles action" data="subtitles">SUBS</div>
+        <div class="stop">STOP</div>
+        <div class="button action backward" data="seek_back"><i class="fa fa-backward"></i></div>  
+        <div class="button action forward" data="seek_forward"><i class="fa fa-forward"></i></div>
+        <div class="button action play" data="pause" id="action"><i class="fa fa-play"></i></div>
+      </div>
+      <div class="volume">
+        <div class="button action down volume-down" data="volume_down"><i class="fa fa-volume-down"></i></div>
+        <div class="button action up volume-up" data="volume_up"><i class="fa fa-volume-up"></i></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      function command(name) {
+        $.getJSON("/command/" + name, {}, function(resp) {
+          console.log(resp);
+        });
+      }
+
+      function play(path) {
+        $.getJSON("/play", { file: path }, function(resp) {
+          if (resp.success) {
+            $(".browse").hide();
+            $(".controls").show();
+          }
+        });
+      }
+
+      function browse(path) {
+        $("ul").html("");
+
+        path = path || "";
+
+        $.getJSON("/browse", { path: path }, function(resp) {
+          // Add return back element if we under a parent directory
+          if (path != "") {
+            items = path.split("/"); items.pop();
+            back_path = items[0] || "";
+            $("<li><a href='#' data='" + back_path + "'><i class='fa fa-level-up'></i> back</a></li>").appendTo(".browse ul");
+          }
+
+          for (i in resp) {
+            file = resp[i];
+            name = file.filename;
+
+            if (path != "") {
+              name = path + "/" + name;
+            }
+
+            // Either a file or a directory
+            data_type = file.directory ? "dir" : "file";
+            css_class = file.directory ? "fa-folder" : "fa-film";
+
+            $("<li><a href='#' data-type='" + data_type + "' data='" + name + "'><i class='fa " + css_class + "'></i> " + file.filename + "</a></li>").appendTo(".browse ul");
+          }
+        });
+      }
+
+      $(function() {
+        $.getJSON("/status", {}, function(resp) {
+          if (resp.running) {
+            $(".controls").show();
+          }
+          else {
+            $(".browse").show();
+            browse();
+          }
+        });
+
+        $(".stop").on("click", function() {
+          command("stop");
+          window.location.reload();
+        });
+
+        $(".action").on("click", function() {
+          command($(this).attr("data"));
+        });
+
+        $("body").on("click", "a", function() {
+          var path = $(this).attr("data");
+          var type = $(this).attr("data-type");
+
+          if (type == "file") {
+            play(path);
+          }
+          else {
+            browse(path);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

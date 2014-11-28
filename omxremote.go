@@ -262,6 +262,17 @@ func httpStatus(c *gin.Context) {
 	c.String(200, fmt.Sprintf(`{"running":%v}`, omxIsActive()))
 }
 
+func httpIndex(c *gin.Context) {
+	data, err := Asset("static/index.html")
+
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+
+	c.Data(200, "text/html; charset=utf-8", data)
+}
+
 func terminate(message string, code int) {
 	fmt.Println(message)
 	os.Exit(code)
@@ -300,6 +311,7 @@ func main() {
 	// Setup HTTP server
 	router := gin.Default()
 
+	router.GET("/", httpIndex)
 	router.GET("/status", httpStatus)
 	router.GET("/browse", httpBrowse)
 	router.GET("/play", httpPlay)
