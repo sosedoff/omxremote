@@ -20,6 +20,12 @@ type Response struct {
 	Message string `json:"message"`
 }
 
+type StatusResponse struct {
+	Running       bool   `json:"running"`      // True if player is running
+	CurrentFile   string `json:"current_file"` // Path to current media file
+	MovieDbApiKey string `json:"tmdb_api_key"` // TheMovieDb API key
+}
+
 type FileEntry struct {
 	Filename string `json:"filename"`
 	IsDir    bool   `json:"directory"`
@@ -193,6 +199,9 @@ func omxPlay(file string) error {
 		return err
 	}
 
+	// Set current file
+	CurrentFile = file
+
 	// Make child's STDIN globally available
 	OmxIn = stdin
 
@@ -224,6 +233,7 @@ func omxKill() {
 func omxCleanup() {
 	Omx = nil
 	OmxIn = nil
+	CurrentFile = ""
 
 	omxKill()
 }
@@ -240,6 +250,11 @@ func omxCanPlay(path string) bool {
 	}
 
 	return false
+}
+
+// Check if TheMovieDB API could be used
+func movieDbApiKey() string {
+	return os.Getenv("TMDB_API_KEY")
 }
 
 func httpBrowse(c *gin.Context) {
@@ -300,7 +315,13 @@ func httpPlay(c *gin.Context) {
 }
 
 func httpStatus(c *gin.Context) {
-	c.String(200, fmt.Sprintf(`{"running":%v}`, omxIsActive()))
+	result := StatusResponse{
+		Running:       omxIsActive(),
+		CurrentFile:   CurrentFile,
+		MovieDbApiKey: movieDbApiKey(),
+	}
+
+	c.JSON(200, result)
 }
 
 func httpIndex(c *gin.Context) {
