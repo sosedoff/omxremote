@@ -254,8 +254,9 @@
         $.getJSON("/browse", { path: path }, function(resp) {
           // Add return back element if we under a parent directory
           if (path != "") {
-            items = path.split("/"); items.pop();
-            back_path = items[0] || "";
+            items     = path.split("/"); items.pop();
+            back_path = items.join("/");
+
             $("<li><a href='#' data='" + back_path + "'><i class='fa fa-level-up'></i> back</a></li>").appendTo(".browse ul");
           }
 
