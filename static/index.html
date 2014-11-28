@@ -25,6 +25,7 @@
 
     .browse {
       display: none;
+      z-index: 1;
     }
 
     .browse ul {
@@ -65,7 +66,9 @@
       position: relative;
       width: 100%;
       height: 100%;
+      z-index: 2;
     }
+
     .controls i {
       position: absolute;
       top: 50%; left: 50%;
@@ -209,6 +212,58 @@
       color: #aaa;
     }
 
+    .controls .main .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      height: auto;
+      width: 20%;
+      margin: 0 auto;
+      text-align: center; 
+      font-size: 1.5em;
+      text-align: left;
+      color: #aaa;
+      display: none;
+    }
+
+    .movie {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 300;
+      background: #fff;
+    }
+
+    .movie .image {
+    }
+    
+    .movie .image img {
+      width: 100%;
+    }
+
+    .movie .details {
+      padding: 20px;
+    }
+
+    .movie .details .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .movie .movie-close {
+      display: block;
+      background: #999;
+      color: #fff;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+      line-height: 40px;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
   </style>
   <body>
     <div class="browse">
@@ -223,6 +278,7 @@
       <div class="main">
         <div class="subtitles action" data="subtitles">SUBS</div>
         <div class="stop">STOP</div>
+        <div class="info">INFO</div>
         <div class="button action backward" data="seek_back"><i class="fa fa-backward"></i></div>  
         <div class="button action forward" data="seek_forward"><i class="fa fa-forward"></i></div>
         <div class="button action play" data="pause" id="action"><i class="fa fa-play"></i></div>
@@ -233,7 +289,18 @@
       </div>
     </div>
 
+    <div class="movie">
+      <div class="image"><img src="" /></div>
+      <div class="details">
+        <div class="title"></div>
+        <div class="description"></div>
+        <a href="#" class="movie-close">Close</a>
+      </div>
+    </div>
+
     <script type="text/javascript">
+      var playerStatus = null;
+
       function command(name) {
         $.getJSON("/command/" + name, {}, function(resp) {
           console.log(resp);
@@ -243,8 +310,7 @@
       function play(path) {
         $.getJSON("/play", { file: path }, function(resp) {
           if (resp.success) {
-            $(".browse").hide();
-            $(".controls").show();
+            updateStatus();
           }
         });
       }
@@ -280,16 +346,62 @@
         });
       }
 
-      $(function() {
+      function updateStatus() {
         $.getJSON("/status", {}, function(resp) {
+          playerStatus = resp;
+
           if (resp.running) {
+            $(".browse").hide();
             $(".controls").show();
+
+            if (resp.tmdb_api_key != "") {
+              $(".info").show();
+            }
           }
           else {
             $(".browse").show();
+            $(".controls").hide();
             browse();
           }
         });
+      }
+
+      function displayMovie(data) {
+        var imageUrl = "https://image.tmdb.org/t/p/w300/" + data.poster_path;
+
+        $(".movie img").attr("src", imageUrl);
+        $(".movie .title").text(data.original_title);
+        $(".movie .description").text(data.overview);
+
+        $(".controls").hide();
+        $(".movie").show();
+      }
+
+      function getMovie(id) {
+        var params = {
+          api_key: playerStatus.tmdb_api_key
+        };
+
+        $.getJSON("https://api.themoviedb.org/3/movie/" + id, params, function(resp) {
+          displayMovie(resp);
+        });
+      }
+
+      function searchMovie(name) {
+        var params = {
+          api_key: playerStatus.tmdb_api_key,
+          query: name
+        };
+
+        $.getJSON("https://api.themoviedb.org/3/search/movie", params, function(resp) {
+          if (resp.total_results > 0) {
+            getMovie(resp.results[0].id);
+          }
+        });
+      }
+
+      $(function() {
+        updateStatus();
 
         $(".stop").on("click", function() {
           command("stop");
@@ -299,6 +411,15 @@
         $(".action").on("click", function() {
           command($(this).attr("data"));
         });
+
+        $(".info").on("click", function() {
+          searchMovie(playerStatus.name);
+        });
+
+        $(".movie-close").on("click", function() {
+          $(".movie").hide();
+          $(".controls").show();
+        })
 
         $("body").on("click", "a", function() {
           var path = $(this).attr("data");
