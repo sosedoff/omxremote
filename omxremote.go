@@ -19,7 +19,7 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-type Entry struct {
+type FileEntry struct {
 	Filename string `json:"filename"`
 	IsDir    bool   `json:"directory"`
 }
@@ -65,8 +65,8 @@ func fileExists(path string) bool {
 
 // Scan given path for all directories and matching video files.
 // If nothing was found it will return an empty slice.
-func scanPath(path string) []Entry {
-	entries := make([]Entry, 0)
+func scanPath(path string) []FileEntry {
+	entries := make([]FileEntry, 0)
 
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -74,7 +74,7 @@ func scanPath(path string) []Entry {
 	}
 
 	for _, file := range files {
-		entry := Entry{
+		entry := FileEntry{
 			Filename: file.Name(),
 			IsDir:    file.IsDir(),
 		}
