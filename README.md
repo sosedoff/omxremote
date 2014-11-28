@@ -34,6 +34,12 @@ No special permissions are required in order to play videos with `omxplayer` and
 
 Use [Github Releases](https://github.com/sosedoff/omxremote/releases)
 
+Or run the following snippet for quick install:
+
+```
+curl -s https://raw.githubusercontent.com/sosedoff/omxremote/master/install.sh | bash
+```
+
 ## Compile
 
 Compiling this project on RPi is a bit of a difficult task and does not necessarily makes
@@ -58,11 +64,35 @@ GOOS=linux GOARCH=arm go build
 To start omxremote, run the following command:
 
 ```
-omxremote /path/to/your/video/files
+omxremote /path/to/media
 ```
 
 Server will start on port 8080 and listen on all network interfaces. You can
-connect to it if you have any device (laptop, phone) on the same wifi network. 
+connect to it if you have any device (laptop, phone) on the same wifi network.
+If you dont know the IP address of your RPi, run `ifconfig`.
+
+### Running as daemon
+
+You can run omxremote in a daemon mode with init.d. First, make sure omxremote
+is installed in a right place:
+
+```
+which omxremote
+# => /usr/bin/omxremote
+```
+
+Use the following [example](https://github.com/sosedoff/omxremote/blob/master/init.d/omxremote) to create a new init.d script:
+
+```
+sudo nano /etc/init.d/omxremote
+sudo chmod +x /etc/init.d/omxremote
+```
+
+And then you can start the remote:
+
+```
+sudo /etc/init.d/omxremote start
+```
 
 ## License
 
