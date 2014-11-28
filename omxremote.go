@@ -241,6 +241,8 @@ func httpPlay(c *gin.Context) {
 		return
 	}
 
+	file = fmt.Sprintf("%s/%s", MediaPath, file)
+
 	if !fileExists(file) {
 		c.JSON(400, Response{false, "File does not exist"})
 		return
