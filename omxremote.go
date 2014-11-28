@@ -223,6 +223,8 @@ func httpCommand(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("Received command:", val)
+
 	// Handle requested commmand
 	Command <- val
 
