@@ -13,6 +13,7 @@ func Test_fileToTitle(t *testing.T) {
 		"Movie Name 2007 BRRip 720p x264 AAC - PRiSTiNE [P2PDL].mp4",
 		"Movie Name.2011.limited.720p.BRRip.H264.AAC-MAJESTiC.mp4",
 		"Movie.Name.2010.1080p.BrRip.x264.YIFY.mp4",
+		"Movie Name[2011]BRRip XviD-ExtraTorrentRG.avi",
 		"Movie.Name.S05E01.HDTV.x264-LOL.mp4",
 	}
 

@@ -39,6 +39,7 @@ var (
 	// Regular expression to convert filenames to titles
 	RegexBrackets = regexp.MustCompile(`[\(\[\]\)]`)
 	RegexYear     = regexp.MustCompile(`((19|20)[\d]{2})`)
+	RegexEpisode  = regexp.MustCompile(`(?i)S[\d]+E[\d]+`)
 	RegexJunk     = regexp.MustCompile(`(?i)(1080p|720p|3d|brrip|bluray|webrip|x264|aac)`)
 	RegexSpace    = regexp.MustCompile(`\s{2,}`)
 
@@ -122,6 +123,13 @@ func fileToTitle(name string) string {
 	pos := RegexYear.FindStringIndex(name)
 	if len(pos) > 0 {
 		name = name[0:pos[0]]
+	} else {
+		// Check if is an episode, ie S##E##
+		pos = RegexEpisode.FindStringIndex(name)
+
+		if len(pos) > 0 {
+			name = name[0:pos[0]]
+		}
 	}
 
 	// Remove junk stuff
