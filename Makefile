@@ -11,6 +11,7 @@ dev-assets:
 
 setup:
 	go get github.com/jteeuwen/go-bindata/...
+	go get github.com/stretchr/testify/assert
 	go get
 
 release: clean assets
