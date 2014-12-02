@@ -377,12 +377,12 @@
         $(".movie").show();
       }
 
-      function getMovie(id) {
+      function getMovie(id, media_type) {
         var params = {
           api_key: playerStatus.tmdb_api_key
         };
 
-        $.getJSON("https://api.themoviedb.org/3/movie/" + id, params, function(resp) {
+        $.getJSON("https://api.themoviedb.org/3/" + media_type + "/" + id, params, function(resp) {
           displayMovie(resp);
         });
       }
@@ -393,9 +393,10 @@
           query: name
         };
 
-        $.getJSON("https://api.themoviedb.org/3/search/movie", params, function(resp) {
+        $.getJSON("https://api.themoviedb.org/3/search/multi", params, function(resp) {
           if (resp.total_results > 0) {
-            getMovie(resp.results[0].id);
+            item = resp.results[0];
+            getMovie(item.id, item.media_type);
           }
         });
       }
