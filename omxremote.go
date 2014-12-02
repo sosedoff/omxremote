@@ -124,7 +124,7 @@ func fileToTitle(name string) string {
 	if len(pos) > 0 {
 		name = name[0:pos[0]]
 	} else {
-		// Check if is an episode, ie S##E##
+		// Check if its an episode, i.e. "S##E##"
 		pos = RegexEpisode.FindStringIndex(name)
 
 		if len(pos) > 0 {
