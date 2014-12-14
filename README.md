@@ -20,8 +20,10 @@ no external dependencies to be downloaded and installed on your RPi.
 
 ## Requirements
 
-In order to use `omxremote` you must have `omxplayer` installed on your RPi. In case if
-you dont have it installed, use the following commands:
+In order to use `omxremote` you must have `omxplayer` installed on your RPi. Most
+recent distributions on Rasbpian should already come with `omxplayer` preinstalled.
+
+In case if you dont have it installed, use the following commands:
 
 ```
 sudo apt-get update
