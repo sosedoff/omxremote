@@ -18,7 +18,7 @@ video playback on a remote RPi device. Its built in Go, which has provides capab
 cross-compile source code for ARM and as a result provides a single binary with 
 no external dependencies to be downloaded and installed on your RPi.
 
-[GUI Screenshot](blob/master/screenshots/omxremote.png)
+[GUI Screenshot](screenshots/omxremote.png)
 
 ## Requirements
 
