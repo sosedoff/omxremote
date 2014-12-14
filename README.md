@@ -96,6 +96,16 @@ And then you can start the remote:
 sudo /etc/init.d/omxremote start
 ```
 
+### Troubleshooting
+
+```
+ERROR: COMXAudio::Decode timeout
+```
+
+If you see this error when playing video files, make sure to give more memory
+to raspberry pi GPU. On B+ model the default is 16mb. Try setting it to 64/128mb.
+To edit settings, run: `sudo raspi-config`.
+
 ## License
 
 The MIT License (MIT)
