@@ -13,7 +13,7 @@ DAEMON=/usr/bin/$NAME
 OPTIONS="/PATH/TO/MEDIA"
 USER=pi
 STOP_TIMEOUT=30
-PIDFILE=/var/run/$DAEMON_NAME.pid
+PIDFILE=/var/run/$NAME.pid
 
 export PATH="${PATH:+$PATH:}/sbin"
 
