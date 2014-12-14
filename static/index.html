@@ -17,10 +17,20 @@
       margin: 0px;
       height: 100%;
       font-family: Helvetica;
+      background: #000;
+    }
+
+    i.fa-play {
+      padding-left: 8px;
     }
 
     .button {
       cursor: pointer;
+      color: #444;
+    }
+
+    .button.active {
+      color: #fff !important;
     }
 
     .browse {
@@ -39,13 +49,13 @@
       list-style-type: none;
       list-style: none;
       line-height: 1.5em;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid #222;
       padding: 12px 8px;
       font-size: 1.1em;
     }
 
     .browse ul li i {
-      color: #999;
+      color: #555;
       margin-right: 4px;
       display: inline-block;
       width: 20px;
@@ -54,7 +64,7 @@
 
     .browse ul li a {
       text-decoration: none;
-      color: #000;
+      color: #aaa;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -90,15 +100,16 @@
       text-align: center;
       font-size: 2em;
       box-sizing: border-box;
-      border-bottom: 4px solid #eee;
+      border-bottom: 4px solid #000;
+      background: #222;
     }
 
     .controls .rewind .backward-fast {
-      border-right: 2px solid #eee;
+      border-right: 2px solid #000;
     }
 
     .controls .rewind .forward-fast {
-      border-left: 2px solid #eee;
+      border-left: 2px solid #000;
     }
 
     .controls .volume {
@@ -116,15 +127,16 @@
       text-align: center;
       font-size: 3em;
       box-sizing: border-box;
-      border-top: 4px solid #eee;
+      border-top: 4px solid #000;
+      background: #222;
     }
 
     .controls .volume .volume-up {
-      border-left: 2px solid #eee;
+      border-left: 2px solid #000;
     }
 
     .controls .volume .volume-down {
-      border-right: 2px solid #eee;
+      border-right: 2px solid #000;
     }
 
     .controls .main {
@@ -144,7 +156,8 @@
       margin: 0 auto;
       text-align: center; 
       font-size: 4em;
-      box-shadow: inset 0 0 0 10px #ddd;
+      box-shadow: inset 0 0 0 3px #888;
+      color: #888;
     }
 
     .controls .main .play:before {
@@ -159,12 +172,16 @@
       -webkit-transform: translate(-215%, -50%);
       height: auto;
       width: 20%;
-      background: blue;
       border-radius: 100%;
       margin: 0 auto;
       text-align: center; 
-      background: #eee;
       font-size: 2em;
+      box-shadow: inset 0 0 0 3px #888;
+      color: #888;
+    }
+
+    .controls .main .backward i {
+      padding-right: 8px;
     }
 
     .controls .main .forward {
@@ -173,12 +190,16 @@
       -webkit-transform: translate(115%, -50%);
       height: auto;
       width: 20%;
-      background: blue;
       border-radius: 100%;
       margin: 0 auto;
-      text-align: center; 
-      background: #eee;
+      text-align: center;
       font-size: 2em;
+      box-shadow: inset 0 0 0 3px #888;
+      color: #888;
+    }
+
+    .controls .main .forward i {
+      padding-left: 6px;
     }
 
     .controls .main .forward:before,
@@ -197,7 +218,7 @@
       text-align: center; 
       font-size: 1.5em;
       text-align: right;
-      color: #aaa;
+      color: #999;
     }
 
     .controls .main .stop {
@@ -209,7 +230,7 @@
       text-align: center; 
       font-size: 1.5em;
       text-align: left;
-      color: #aaa;
+      color: #999;
     }
 
     .controls .main .info {
@@ -222,7 +243,7 @@
       text-align: center; 
       font-size: 1.5em;
       text-align: left;
-      color: #aaa;
+      color: #999;
       display: none;
     }
 
@@ -411,6 +432,18 @@
 
         $(".action").on("click", function() {
           command($(this).attr("data"));
+          $(this).removeClass("active");
+
+          if ($(this).hasClass("play")) {
+            el = $(this).find("i");
+
+            if (el.hasClass("fa-play")) {
+              el.removeClass("fa-play").addClass("fa-pause");
+            }
+            else {
+              el.removeClass("fa-pause").addClass("fa-play");
+            }
+          }
         });
 
         $(".info").on("click", function() {
@@ -421,6 +454,14 @@
           $(".movie").hide();
           $(".controls").show();
         })
+
+        $(".button").on("touchstart mousedown", function() {
+          $(this).addClass("active");
+        });
+
+        $(".button").on("touchend touchcancel mouseup", function() {
+          $(this).removeClass("active");
+        });
 
         $("body").on("click", "a", function() {
           var path = $(this).attr("data");
