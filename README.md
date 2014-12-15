@@ -1,6 +1,6 @@
 # omxremote
 
-Web frontend and API for Raspberry Pi omxplayer media player
+Web interface and API for Raspberry Pi Omxplayer.
 
 ## Overview
 
@@ -8,17 +8,15 @@ Web frontend and API for Raspberry Pi omxplayer media player
 is one of the most simpliest video players you can find. Although there are many others,
 including [raspbmc](http://www.raspbmc.com/) that work as a full-blown media center,
 omxplayer is a perfect fit for systems that do not have any GUI or peripherals and running stock 
-[Rasbpian](http://www.raspbian.org/) operating system. However, omxplayer was designed to be
+[Rasbpian](http://www.raspbian.org/) OS. However, omxplayer was designed to be
 controlled via keyboard shortcuts and does not provide any way to control it remotely.
-To control omxplayer programmatically one has to attach to process' STDIN and send commands as 
-plaintext. 
 
 Omxremote project is an attempt to build a web frontend and simple API to control 
-video playback on a remote RPi device. Its built in Go, which has provides capability to 
+video playback on a remote RPi device. Its built in Go, which has capability to 
 cross-compile source code for ARM and as a result provides a single binary with 
-no external dependencies to be downloaded and installed on your RPi.
+no external dependencies to be downloaded and installed on your Pi.
 
-[GUI Screenshot](screenshots/omxremote.png)
+[Screenshot](screenshots/omxremote.png)
 
 ## Requirements
 
@@ -97,6 +95,27 @@ And then you can start the remote:
 ```
 sudo /etc/init.d/omxremote start
 ```
+
+### API
+
+Endpoints:
+
+- `/status` - Returns current player status
+- `/browse` - Returns files in specified media directory
+- `/play` - Start media playback
+- `/command/:name` - Execute a command
+
+Available commands:
+
+- `pause`
+- `stop`
+- `volume_up`
+- `volume_down`
+- `subtitles`
+- `seek_back`
+- `seek_back_fast`
+- `seek_forward`
+- `seek_forward_fast`
 
 ### Troubleshooting
 
