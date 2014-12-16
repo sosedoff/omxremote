@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const VERSION = "0.1.0"
+const VERSION = "0.1.1"
 
 type Response struct {
 	Success bool   `json:"success"`
