@@ -88,6 +88,15 @@ which omxremote
 # => /usr/bin/omxremote
 ```
 
+Next step is to create a media directory:
+
+```
+mkdir /home/pi/media
+```
+
+This directory will be used by omxremote to scan for all media files. The following
+section config files will also use that directory.
+
 #### init.d
 
 Use the following [example](https://github.com/sosedoff/omxremote/blob/master/config/omxremote.initd) to create a new init.d script:
