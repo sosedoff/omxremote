@@ -127,6 +127,15 @@ If you see this error when playing video files, make sure to give more memory
 to raspberry pi GPU. On B+ model the default is 16mb. Try setting it to 64/128mb.
 To edit settings, run: `sudo raspi-config`.
 
+#### Raspbian 8
+
+Raspbian 8 does not carry `omxplayer` binary. You must install the player before
+using omxremote:
+
+```
+sudo apt-get install -y omxplayer
+```
+
 ## License
 
 The MIT License (MIT)
