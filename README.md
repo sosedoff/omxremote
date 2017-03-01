@@ -75,15 +75,22 @@ If you dont know the IP address of your RPi, run `ifconfig`.
 
 ### Running as daemon
 
-You can run omxremote in a daemon mode with init.d. First, make sure omxremote
-is installed in a right place:
+First, make sure you have copied the binary to `/usr/bin/`:
+
+```
+sudo cp omxremote /usr/bin/
+```
+
+To test if omxremote could be found in $PATH, run:
 
 ```
 which omxremote
 # => /usr/bin/omxremote
 ```
 
-Use the following [example](https://github.com/sosedoff/omxremote/blob/master/init.d/omxremote) to create a new init.d script:
+#### init.d
+
+Use the following [example](https://github.com/sosedoff/omxremote/blob/master/config/omxremote.initd) to create a new init.d script:
 
 ```
 sudo nano /etc/init.d/omxremote
@@ -94,6 +101,16 @@ And then you can start the remote:
 
 ```
 sudo /etc/init.d/omxremote start
+```
+
+#### systemd
+
+Use the following [example](https://github.com/sosedoff/omxremote/blob/master/config/omxremote.service) to create a new unit file:
+
+```
+sudo nano /etc/systemd/system/omxremote.unit
+sudo systemctl enable omxremote
+sudo service omxremote start
 ```
 
 ### API
