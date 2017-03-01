@@ -131,4 +131,4 @@ To edit settings, run: `sudo raspi-config`.
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Dan Sosedoff, dan.sosedoff@gmail.com
+Copyright (c) 2014-2017 Dan Sosedoff, dan.sosedoff@gmail.com
