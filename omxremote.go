@@ -391,6 +391,11 @@ func main() {
 	router.GET("/play", httpPlay)
 	router.GET("/command/:command", httpCommand)
 
-	fmt.Println("Starting server on 0.0.0.0:8080")
-	router.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Println("Starting server on 0.0.0.0:" + port)
+	router.Run(":" + port)
 }
