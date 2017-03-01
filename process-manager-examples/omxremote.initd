@@ -10,7 +10,7 @@
 
 NAME=omxremote
 DAEMON=/usr/bin/$NAME
-OPTIONS="/PATH/TO/MEDIA"
+OPTIONS="/home/pi/media"
 USER=pi
 STOP_TIMEOUT=30
 PIDFILE=/var/run/$NAME.pid

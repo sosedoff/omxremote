@@ -1,0 +1,12 @@
+[Unit]
+Description=omxremote
+After=network.target
+
+[Service]
+User=pi
+Type=simple
+ExecStart=/usr/bin/omxremote /home/pi/media
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
