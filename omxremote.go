@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -294,6 +295,26 @@ func httpCommand(c *gin.Context) {
 	c.JSON(200, Response{true, "OK"})
 }
 
+func httpServe(c *gin.Context) {
+	file := c.Request.URL.Query().Get("file")
+	if file == "" {
+		return
+	}
+
+	file = fmt.Sprintf("%s/%s", MediaPath, file)
+	if !fileExists(file) {
+		c.String(404, "Not found")
+		return
+	}
+
+	if !omxCanPlay(file) {
+		c.String(400, "Invalid format")
+		return
+	}
+
+	http.ServeFile(c.Writer, c.Request, file)
+}
+
 func httpPlay(c *gin.Context) {
 	if omxIsActive() {
 		c.JSON(400, Response{false, "Player is already running"})
@@ -389,6 +410,7 @@ func main() {
 	router.GET("/status", httpStatus)
 	router.GET("/browse", httpBrowse)
 	router.GET("/play", httpPlay)
+	router.GET("/serve", httpServe)
 	router.GET("/command/:command", httpCommand)
 
 	port := os.Getenv("PORT")
