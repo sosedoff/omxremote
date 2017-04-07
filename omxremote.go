@@ -183,12 +183,14 @@ func omxListen() {
 // Start omxplayer playback for a given video file. Returns error if start fails.
 func omxPlay(file string) error {
 	Omx = exec.Command(
-		OmxPath,     // path to omxplayer executable
-		"--refresh", // adjust framerate/resolution to video
-		"--blank",   // set background to black
-		"--adev",    // audio out device
-		"hdmi",      // using hdmi for audio/video
-		file,        // path to video file
+		OmxPath,       // path to omxplayer executable
+		"--stats",     // print stats to stdout (buffers, time, etc)
+		"--with-info", // print stats about streams before playback
+		"--refresh",   // adjust framerate/resolution to video
+		"--blank",     // set background to black
+		"--adev",      // audio out device
+		"hdmi",        // using hdmi for audio/video
+		file,          // path to video file
 	)
 
 	// Grab child process STDIN
