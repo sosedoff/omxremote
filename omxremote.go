@@ -431,6 +431,13 @@ func main() {
 	// Setup HTTP server
 	router := gin.Default()
 
+	// Handle CORS
+	router.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Expose-Headers", "*")
+	})
+
 	router.GET("/", httpIndex)
 	router.GET("/status", httpStatus)
 	router.GET("/browse", httpBrowse)
