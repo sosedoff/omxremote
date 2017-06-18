@@ -22,10 +22,12 @@ type Response struct {
 }
 
 type StatusResponse struct {
-	Running       bool   `json:"running"`      // True if player is running
-	File          string `json:"file"`         // Path to current media file
-	Name          string `json:"name"`         // Titleized filename
-	MovieDbApiKey string `json:"tmdb_api_key"` // TheMovieDb API key
+	Running       bool   `json:"running"`            // True if player is running
+	File          string `json:"file"`               // Path to current media file
+	Name          string `json:"name"`               // Titleized filename
+	MovieDbApiKey string `json:"tmdb_api_key"`       // TheMovieDb API key
+	Position      string `json:"position,omitempty"` // Current position in the movie
+	Duration      string `json:"duration,omitempty"` // Movie duration
 }
 
 type FileEntry struct {
@@ -74,6 +76,9 @@ var (
 
 	// Currently playing media file name
 	CurrentFile string
+
+	// Current stream
+	stream *Stream
 )
 
 // Returns true if specified file exists
@@ -198,11 +203,22 @@ func omxPlay(file string) error {
 	if err != nil {
 		return err
 	}
-
 	defer stdin.Close()
 
-	// Redirect output for debugging purposes
-	Omx.Stdout = os.Stdout
+	stderr, err := Omx.StderrPipe()
+	if err != nil {
+		return err
+	}
+	defer stderr.Close()
+
+	stdout, err := Omx.StdoutPipe()
+	if err != nil {
+		return err
+	}
+	defer stdout.Close()
+
+	stream = NewStream()
+	go stream.Start(stdout, stderr)
 
 	// Start omxplayer execution.
 	// If successful, something will appear on HDMI display.
@@ -248,6 +264,8 @@ func omxCleanup() {
 	CurrentFile = ""
 
 	omxKill()
+
+	stream = nil
 }
 
 // Check if player is currently active
@@ -347,14 +365,19 @@ func httpPlay(c *gin.Context) {
 }
 
 func httpStatus(c *gin.Context) {
-	result := StatusResponse{
+	resp := StatusResponse{
 		Running:       omxIsActive(),
 		File:          CurrentFile,
 		Name:          fileToTitle(filepath.Base(CurrentFile)),
 		MovieDbApiKey: movieDbApiKey(),
 	}
 
-	c.JSON(200, result)
+	if stream != nil {
+		resp.Duration = durationFromSeconds(stream.duration)
+		resp.Position = stream.pos.String()
+	}
+
+	c.JSON(200, resp)
 }
 
 func httpIndex(c *gin.Context) {
