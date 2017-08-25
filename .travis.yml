@@ -1,0 +1,14 @@
+sudo: required
+
+language: go
+
+go:
+  - 1.8.3
+
+install:
+  - make setup
+
+script:
+  - make dev
+  - make test
+  - make release

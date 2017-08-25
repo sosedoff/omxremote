@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -76,6 +77,9 @@ var (
 
 	// Currently playing media file name
 	CurrentFile string
+
+	// Enable Zeroconf discovery
+	Zeroconf bool
 
 	// Current stream
 	stream *Stream
@@ -400,15 +404,18 @@ func usage() {
 	terminate("Usage: omxremote path/to/media/dir", 0)
 }
 
-func main() {
-	fmt.Printf("omxremote v%v\n", VERSION)
+func init() {
+	flag.StringVar(&MediaPath, "media", "./", "Path to media files")
+	flag.BoolVar(&Zeroconf, "zeroconf", false, "Enable service advertisement with Zeroconf")
+	flag.Parse()
+}
 
-	if len(os.Args) < 2 {
-		usage()
-	}
+func main() {
+	// Expand media path if needed
+	MediaPath = strings.Replace(MediaPath, "~", os.Getenv("HOME"), 1)
 
 	// Get path from arguments and remove trailing slash
-	MediaPath = strings.TrimRight(os.Args[1], "/")
+	MediaPath = strings.TrimRight(MediaPath, "/")
 
 	if !fileExists(MediaPath) {
 		terminate(fmt.Sprintf("Directory does not exist: %s", MediaPath), 1)
@@ -424,6 +431,10 @@ func main() {
 
 	// Start a remote command listener
 	go omxListen()
+
+	// Start zeroconf service advertisement
+	stopZeroconf := make(chan bool)
+	go startZeroConfAdvertisement(stopZeroconf)
 
 	// Disable debugging mode
 	gin.SetMode("release")

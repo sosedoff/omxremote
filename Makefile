@@ -14,6 +14,9 @@ setup:
 	go get github.com/stretchr/testify/assert
 	go get
 
+test:
+	go test ./...
+
 release: clean assets
 	GOOS=linux GOARCH=arm go build
 
