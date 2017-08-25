@@ -405,9 +405,17 @@ func usage() {
 }
 
 func init() {
+	var printVersion bool
+
 	flag.StringVar(&MediaPath, "media", "./", "Path to media files")
 	flag.BoolVar(&Zeroconf, "zeroconf", false, "Enable service advertisement with Zeroconf")
+	flag.BoolVar(&printVersion, "v", false, "Print version")
 	flag.Parse()
+
+	if printVersion {
+		fmt.Printf("omxremote v%v\n", VERSION)
+		os.Exit(0)
+	}
 }
 
 func main() {
