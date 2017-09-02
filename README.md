@@ -63,15 +63,34 @@ GOOS=linux GOARCH=arm go build
 
 ## Usage
 
+Options:
+
+```
+Usage of ./omxremote:
+  -media string
+      Path to media files (default "./")
+  -zeroconf
+      Enable service advertisement with Zeroconf
+  -v  Print version
+```
+
 To start omxremote, run the following command:
 
 ```
-omxremote /path/to/media
+omxremote -media /path/to/media
 ```
 
 Server will start on port 8080 and listen on all network interfaces. You can
 connect to it if you have any device (laptop, phone) on the same wifi network.
 If you dont know the IP address of your RPi, run `ifconfig`.
+
+To enable service discovery using [Zeroconf](http://zeroconf.org/), use the flag:
+
+```
+omxremote -media ./ -zeroconf
+```
+
+Omxremote advertises itself as `omxremote._tcp`
 
 ### Running as daemon
 

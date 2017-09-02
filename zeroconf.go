@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	zeroConfName    = "omxremote"
-	zeroconfService = "_http._tcp"
+	zeroConfName    = "app"
+	zeroconfService = "_omxremote._tcp"
 	zeroconfDomain  = "local."
 	zeroconfPort    = 8080
 )
