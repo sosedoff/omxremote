@@ -469,6 +469,11 @@ func main() {
 		port = "8080"
 	}
 
-	fmt.Println("Starting server on 0.0.0.0:" + port)
-	router.Run(":" + port)
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = "0.0.0.0"
+	}
+
+	fmt.Println("Starting server on " + host + ":" + port)
+	router.Run(host + ":" + port)
 }

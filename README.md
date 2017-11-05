@@ -80,7 +80,7 @@ To start omxremote, run the following command:
 omxremote -media /path/to/media
 ```
 
-Server will start on port 8080 and listen on all network interfaces. You can
+By default server will start on port 8080 and listen on all network interfaces. You can
 connect to it if you have any device (laptop, phone) on the same wifi network.
 If you dont know the IP address of your RPi, run `ifconfig`.
 
@@ -91,6 +91,11 @@ omxremote -media ./ -zeroconf
 ```
 
 Omxremote advertises itself as `omxremote._tcp`
+
+To start the server on a specific interface or a given port, set the HOST and PORT variables.
+```
+HOST=192.168.1.100 PORT=8081 omxremote -media ./
+```
 
 ### Running as daemon
 
