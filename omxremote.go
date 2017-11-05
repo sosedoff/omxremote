@@ -441,8 +441,10 @@ func main() {
 	go omxListen()
 
 	// Start zeroconf service advertisement
-	stopZeroconf := make(chan bool)
-	go startZeroConfAdvertisement(stopZeroconf)
+	if (Zeroconf) {
+		stopZeroconf := make(chan bool)
+		go startZeroConfAdvertisement(stopZeroconf)
+	}
 
 	// Disable debugging mode
 	gin.SetMode("release")
