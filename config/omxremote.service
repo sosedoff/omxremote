@@ -7,6 +7,8 @@ User=pi
 Type=simple
 ExecStart=/usr/bin/omxremote /home/pi/media
 Restart=always
+#Environment=PORT=8081
+#Environment=HOST=192.168.1.100
 
 [Install]
 WantedBy=multi-user.target
