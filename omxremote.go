@@ -81,6 +81,9 @@ var (
 	// Enable Zeroconf discovery
 	Zeroconf bool
 
+	// Serve frontend app
+	Frontend bool
+
 	// Current stream
 	stream *Stream
 )
@@ -408,6 +411,7 @@ func init() {
 	var printVersion bool
 
 	flag.StringVar(&MediaPath, "media", "./", "Path to media files")
+	flag.BoolVar(&Frontend, "frontend", true, "Enable frontend applicaiton")
 	flag.BoolVar(&Zeroconf, "zeroconf", false, "Enable service advertisement with Zeroconf")
 	flag.BoolVar(&printVersion, "v", false, "Print version")
 	flag.Parse()
@@ -441,7 +445,7 @@ func main() {
 	go omxListen()
 
 	// Start zeroconf service advertisement
-	if (Zeroconf) {
+	if Zeroconf {
 		stopZeroconf := make(chan bool)
 		go startZeroConfAdvertisement(stopZeroconf)
 	}
@@ -459,7 +463,11 @@ func main() {
 		c.Header("Access-Control-Expose-Headers", "*")
 	})
 
-	router.GET("/", httpIndex)
+	// Server frontend application only if its enabled
+	if Frontend == true {
+		router.GET("/", httpIndex)
+	}
+
 	router.GET("/status", httpStatus)
 	router.GET("/browse", httpBrowse)
 	router.GET("/play", httpPlay)
