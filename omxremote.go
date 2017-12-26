@@ -403,16 +403,12 @@ func httpIndex(c *gin.Context) {
 
 // Retrieve information about the host: uptime, storage, etc
 func httpHost(c *gin.Context) {
+	output := map[string]string{}
 	commands := map[string]string{
 		"uptime":  "uptime",
 		"storage": "df -h",
 		"os":      "uname -a",
-	}
-
-	output := map[string]string{
-		"uptime":  "",
-		"storage": "",
-		"os":      "",
+		"memory":  "free -m",
 	}
 
 	wg := &sync.WaitGroup{}
@@ -431,6 +427,7 @@ func httpHost(c *gin.Context) {
 
 			if err := cmd.Run(); err != nil {
 				log.Println("Failed to execute command", k, err)
+				output[key] = "N/A"
 				return
 			}
 
