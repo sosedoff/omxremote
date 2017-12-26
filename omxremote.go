@@ -1,16 +1,19 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 )
@@ -398,6 +401,48 @@ func httpIndex(c *gin.Context) {
 	c.Data(200, "text/html; charset=utf-8", data)
 }
 
+// Retrieve information about the host: uptime, storage, etc
+func httpHost(c *gin.Context) {
+	commands := map[string]string{
+		"uptime":  "uptime",
+		"storage": "df -h",
+		"os":      "uname -a",
+	}
+
+	output := map[string]string{
+		"uptime":  "",
+		"storage": "",
+		"os":      "",
+	}
+
+	wg := &sync.WaitGroup{}
+	wg.Add(len(commands))
+
+	for k, v := range commands {
+		go func(key, name string) {
+			defer wg.Done()
+
+			args := strings.Split(name, " ")
+
+			out := bytes.NewBuffer(nil)
+			cmd := exec.Command(args[0], args[1:]...)
+			cmd.Stdout = out
+			cmd.Stderr = out
+
+			if err := cmd.Run(); err != nil {
+				log.Println("Failed to execute command", k, err)
+				return
+			}
+
+			output[key] = out.String()
+		}(k, v)
+	}
+
+	wg.Wait()
+
+	c.JSON(200, output)
+}
+
 func terminate(message string, code int) {
 	fmt.Println(message)
 	os.Exit(code)
@@ -473,6 +518,7 @@ func main() {
 	router.GET("/play", httpPlay)
 	router.GET("/serve", httpServe)
 	router.GET("/command/:command", httpCommand)
+	router.GET("/host", httpHost)
 
 	port := os.Getenv("PORT")
 	if port == "" {
