@@ -405,9 +405,9 @@ func httpIndex(c *gin.Context) {
 func httpHost(c *gin.Context) {
 	output := map[string]string{}
 	commands := map[string]string{
+		"os":      "uname -a",
 		"uptime":  "uptime",
 		"storage": "df -h",
-		"os":      "uname -a",
 		"memory":  "free -m",
 	}
 
@@ -437,7 +437,12 @@ func httpHost(c *gin.Context) {
 
 	wg.Wait()
 
-	c.JSON(200, output)
+	c.JSON(200, map[string]interface{}{
+		"uptime":  output["uptime"],
+		"os":      output["os"],
+		"storage": parseStorageInfo(output["storage"]),
+		"memory":  parseMemoryInfo(output["memory"]),
+	})
 }
 
 func terminate(message string, code int) {
