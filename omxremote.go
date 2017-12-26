@@ -431,7 +431,7 @@ func httpHost(c *gin.Context) {
 				return
 			}
 
-			output[key] = out.String()
+			output[key] = strings.TrimSpace(out.String())
 		}(k, v)
 	}
 
