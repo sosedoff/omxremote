@@ -407,7 +407,7 @@ func httpHost(c *gin.Context) {
 	commands := map[string]string{
 		"os":      "uname -a",
 		"uptime":  "uptime",
-		"storage": "df -h",
+		"storage": "df -m",
 		"memory":  "free -m",
 	}
 
