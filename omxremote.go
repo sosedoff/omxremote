@@ -63,32 +63,15 @@ var (
 		"seek_forward_fast": "\x1b\x5b\x41", // Seek +600 seconds
 	}
 
-	// Path where all media files are stored
-	MediaPath string
-
-	// Path to omxplayer executable
-	OmxPath string
-
-	// Child process for spawning omxplayer
-	Omx *exec.Cmd
-
-	// Child process STDIN pipe to send commands
-	OmxIn io.WriteCloser
-
-	// Channel to pass along commands to the player routine
-	Command chan string
-
-	// Currently playing media file name
-	CurrentFile string
-
-	// Enable Zeroconf discovery
-	Zeroconf bool
-
-	// Serve frontend app
-	Frontend bool
-
-	// Current stream
-	stream *Stream
+	MediaPath   string         // Path where all media files are stored
+	OmxPath     string         // Path to omxplayer executable
+	Omx         *exec.Cmd      // Child process for spawning omxplayer
+	OmxIn       io.WriteCloser // Child process STDIN pipe to send commands
+	Command     chan string    // Channel to pass along commands to the player routine
+	CurrentFile string         // Currently playing media file name
+	Zeroconf    bool           // Enable Zeroconf discovery
+	Frontend    bool           // Serve frontend app
+	stream      *Stream        // Current stream
 )
 
 // Returns true if specified file exists
