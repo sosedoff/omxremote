@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -104,15 +105,21 @@ func omxPlay(file string) error {
 
 // Write a command string to the omxplayer process's STDIN
 func omxWrite(command string) {
-	if OmxIn != nil {
-		io.WriteString(OmxIn, Commands[command])
+	if OmxIn == nil {
+		log.Println("Cant write to omxplayer stdin: not setup")
+		return
+	}
+
+	_, err := io.WriteString(OmxIn, Commands[command])
+	if err != nil {
+		log.Println("Cant write to omxplayer:", err)
 	}
 }
 
 // Terminate any running omxplayer processes. Fixes random hangs.
 func omxKill() {
-	exec.Command("killall", "omxplayer.bin").Output()
-	exec.Command("killall", "omxplayer").Output()
+	exec.Command("killall", "omxplayer.bin").Run()
+	exec.Command("killall", "omxplayer").Run()
 }
 
 // Reset internal state and stop any running processes
@@ -133,9 +140,5 @@ func omxIsActive() bool {
 
 // Check if player can play the file
 func omxCanPlay(path string) bool {
-	if RegexFormats.Match([]byte(path)) {
-		return true
-	}
-
-	return false
+	return RegexFormats.Match([]byte(path))
 }
