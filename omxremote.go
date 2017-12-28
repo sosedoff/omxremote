@@ -26,12 +26,11 @@ type Response struct {
 }
 
 type StatusResponse struct {
-	Running       bool   `json:"running"`            // True if player is running
-	File          string `json:"file"`               // Path to current media file
-	Name          string `json:"name"`               // Titleized filename
-	MovieDbApiKey string `json:"tmdb_api_key"`       // TheMovieDb API key
-	Position      string `json:"position,omitempty"` // Current position in the movie
-	Duration      string `json:"duration,omitempty"` // Movie duration
+	Running  bool   `json:"running"`            // True if player is running
+	File     string `json:"file"`               // Path to current media file
+	Name     string `json:"name"`               // Titleized filename
+	Position string `json:"position,omitempty"` // Current position in the movie
+	Duration string `json:"duration,omitempty"` // Movie duration
 }
 
 type FileEntry struct {
@@ -275,11 +274,6 @@ func omxCanPlay(path string) bool {
 	return false
 }
 
-// Check if TheMovieDB API could be used
-func movieDbApiKey() string {
-	return os.Getenv("TMDB_API_KEY")
-}
-
 func httpBrowse(c *gin.Context) {
 	path := c.Request.FormValue("path")
 
@@ -380,10 +374,9 @@ func httpRemoveFile(c *gin.Context) {
 
 func httpStatus(c *gin.Context) {
 	resp := StatusResponse{
-		Running:       omxIsActive(),
-		File:          CurrentFile,
-		Name:          fileToTitle(filepath.Base(CurrentFile)),
-		MovieDbApiKey: movieDbApiKey(),
+		Running: omxIsActive(),
+		File:    CurrentFile,
+		Name:    fileToTitle(filepath.Base(CurrentFile)),
 	}
 
 	if stream != nil {
