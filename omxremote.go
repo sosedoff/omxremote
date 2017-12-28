@@ -374,6 +374,27 @@ func httpPlay(c *gin.Context) {
 	c.JSON(200, Response{true, "OK"})
 }
 
+func httpRemoveFile(c *gin.Context) {
+	file := c.Request.FormValue("file")
+	if file == "" {
+		c.JSON(400, Response{false, "File is required"})
+		return
+	}
+
+	fullPath := fmt.Sprintf("%s/%s", MediaPath, file)
+	if !fileExists(fullPath) {
+		c.JSON(400, Response{false, "File does not exist"})
+		return
+	}
+
+	if err := os.RemoveAll(fullPath); err != nil {
+		c.JSON(400, Response{false, err.Error()})
+		return
+	}
+
+	c.JSON(200, Response{true, "OK"})
+}
+
 func httpStatus(c *gin.Context) {
 	resp := StatusResponse{
 		Running:       omxIsActive(),
@@ -519,6 +540,7 @@ func main() {
 	router.GET("/browse", httpBrowse)
 	router.GET("/play", httpPlay)
 	router.GET("/serve", httpServe)
+	router.POST("/remove", httpRemoveFile)
 	router.GET("/command/:command", httpCommand)
 	router.GET("/host", httpHost)
 
