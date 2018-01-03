@@ -150,7 +150,7 @@ func httpPlay(c *gin.Context) {
 }
 
 func httpRemoveFile(c *gin.Context) {
-	file := c.Request.FormValue("file")
+	file := strings.TrimSpace(c.Request.FormValue("file"))
 	if file == "" {
 		c.JSON(400, Response{false, "File is required"})
 		return
