@@ -66,12 +66,14 @@ GOOS=linux GOARCH=arm go build
 Options:
 
 ```
-Usage of ./omxremote:
+Usage of omxremote:
+  -frontend
+      Enable frontend applicaiton (default true)
   -media string
       Path to media files (default "./")
-  -zeroconf
-      Enable service advertisement with Zeroconf
   -v  Print version
+  -zeroconf
+      Enable service advertisement with Zeroconf (default true)
 ```
 
 To start omxremote, run the following command:
@@ -150,10 +152,12 @@ sudo service omxremote start
 
 Endpoints:
 
-- `/status` - Returns current player status
-- `/browse` - Returns files in specified media directory
-- `/play` - Start media playback
+- `/status`        - Returns current player status
+- `/browse`        - Returns files in specified media directory
+- `/play`          - Start media playback
 - `/command/:name` - Execute a command
+- `/host`          - Get host stats (memory, storage)
+- `/remove`        - Remove a media file or directory
 
 Available commands:
 
@@ -190,4 +194,4 @@ sudo apt-get install -y omxplayer
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2017 Dan Sosedoff, dan.sosedoff@gmail.com
+Copyright (c) 2014-2018 Dan Sosedoff, dan.sosedoff@gmail.com
