@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME="omxremote"
-VERSION="0.1.1"
+VERSION="0.2.0"
 URL="https://github.com/sosedoff/$NAME/releases/download/v$VERSION/$NAME"
 BIN_PATH="/usr/bin/$NAME"
 
