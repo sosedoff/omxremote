@@ -254,7 +254,7 @@ func init() {
 
 	flag.StringVar(&MediaPath, "media", "./", "Path to media files")
 	flag.BoolVar(&Frontend, "frontend", true, "Enable frontend applicaiton")
-	flag.BoolVar(&Zeroconf, "zeroconf", false, "Enable service advertisement with Zeroconf")
+	flag.BoolVar(&Zeroconf, "zeroconf", true, "Enable service advertisement with Zeroconf")
 	flag.BoolVar(&printVersion, "v", false, "Print version")
 	flag.Parse()
 
