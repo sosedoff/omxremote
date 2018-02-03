@@ -206,7 +206,9 @@ func httpHost(c *gin.Context) {
 		"memory":  "free -m",
 	}
 
+	lock := &sync.Mutex{}
 	wg := &sync.WaitGroup{}
+
 	wg.Add(len(commands))
 
 	for k, v := range commands {
@@ -222,11 +224,18 @@ func httpHost(c *gin.Context) {
 
 			if err := cmd.Run(); err != nil {
 				log.Println("Failed to execute command", k, err)
+
+				lock.Lock()
 				output[key] = "N/A"
+				lock.Unlock()
+
 				return
 			}
 
+			lock.Lock()
 			output[key] = strings.TrimSpace(out.String())
+			lock.Unlock()
+
 		}(k, v)
 	}
 
