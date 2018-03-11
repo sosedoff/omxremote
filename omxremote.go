@@ -249,6 +249,16 @@ func httpHost(c *gin.Context) {
 	})
 }
 
+// Reboot the operating system
+// POST /reboot
+func httpReboot(c *gin.Context) {
+	if err := exec.Command("sudo", "reboot").Run(); err != nil {
+		c.JSON(400, Response{Success: false, Message: err.Error()})
+		return
+	}
+	c.JSON(200, Response{Success: true})
+}
+
 func terminate(message string, code int) {
 	fmt.Println(message)
 	os.Exit(code)
@@ -326,6 +336,7 @@ func main() {
 	router.POST("/remove", httpRemoveFile)
 	router.GET("/command/:command", httpCommand)
 	router.GET("/host", httpHost)
+	router.POST("/reboot", httpReboot)
 
 	port := os.Getenv("PORT")
 	if port == "" {
