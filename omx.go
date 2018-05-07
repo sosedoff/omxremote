@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -8,6 +9,10 @@ import (
 	"os/exec"
 	"strings"
 )
+
+type FileInfo struct {
+	Duration string `json:"duration"`
+}
 
 // Determine the full path to omxplayer executable. Returns error if not found.
 func omxDetect() error {
@@ -42,6 +47,29 @@ func omxListen() {
 			Omx.Process.Kill()
 		}
 	}
+}
+
+func omxInfo(file string) (*FileInfo, error) {
+	output := bytes.NewBuffer(nil)
+
+	cmd := exec.Command(OmxPath, "--info", file)
+	cmd.Stdout = output
+	cmd.Stderr = output
+
+	// Valid `omxplayer --info` exits with status 1, so we just log the error
+	if err := cmd.Run(); err != nil {
+		log.Println("omxplayer --info returned error:", err)
+	}
+
+	data := string(output.String())
+	info := &FileInfo{}
+
+	matches := durationRegexp.FindAllStringSubmatch(data, 1)
+	if len(matches) > 0 {
+		info.Duration = matches[0][1]
+	}
+
+	return info, nil
 }
 
 // Start omxplayer playback for a given video file. Returns error if start fails.

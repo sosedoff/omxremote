@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var durationRegexp = regexp.MustCompile(`\s?Duration: [\d]+:[\d]+:[\d]+`)
+var durationRegexp = regexp.MustCompile(`\s?Duration: ([\d]+:[\d]+:[\d]+)`)
 
 func durationFromSeconds(value uint64) string {
 	hours := value / 3600
@@ -55,7 +55,9 @@ func (s *Stream) Start(stdout, stderr io.Reader) {
 
 		for scanner.Scan() {
 			line := scanner.Text()
-			if s.parseDuration(line) {
+
+			if duration, found := parseDuration(line); found {
+				s.duration = duration
 				break
 			}
 		}
@@ -73,25 +75,23 @@ func (s *Stream) Start(stdout, stderr io.Reader) {
 	}
 }
 
-func (s *Stream) parseDuration(line string) bool {
+func parseDuration(line string) (uint64, bool) {
 	// It must match the output format "Duration: hh:mm:ss"
-	if !durationRegexp.MatchString(line) {
-		return false
+	matches := durationRegexp.FindAllStringSubmatch(line, 1)
+	if len(matches) == 0 {
+		log.Println("duration matches:", matches)
+		return 0, false
 	}
-
-	// There's a bunch of junk at the beginning of the string
-	line = strings.TrimSpace(line)
 
 	// Read duration values
 	var hours, minutes, seconds int
-	_, err := fmt.Sscanf(line, "Duration: %d:%d:%d", &hours, &minutes, &seconds)
+	_, err := fmt.Sscanf(matches[0][1], "%d:%d:%d", &hours, &minutes, &seconds)
 	if err != nil {
 		fmt.Println("Cant parse duration line:", err)
-		return true
+		return 0, false
 	}
 
-	s.duration = uint64(seconds + minutes*60 + hours*3600)
-	return true
+	return uint64(seconds + minutes*60 + hours*3600), true
 }
 
 func (s *Stream) parsePosition(line string) {
