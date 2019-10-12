@@ -132,16 +132,18 @@ func httpPlay(c *gin.Context) {
 		return
 	}
 
-	file = fmt.Sprintf("%s/%s", MediaPath, file)
+	if !strings.HasPrefix(file, "http") {
+		file = fmt.Sprintf("%s/%s", MediaPath, file)
 
-	if !fileExists(file) {
-		c.JSON(400, Response{false, "File does not exist"})
-		return
-	}
+		if !fileExists(file) {
+			c.JSON(400, Response{false, "File does not exist"})
+			return
+		}
 
-	if !omxCanPlay(file) {
-		c.JSON(400, Response{false, "File cannot be played"})
-		return
+		if !omxCanPlay(file) {
+			c.JSON(400, Response{false, "File cannot be played"})
+			return
+		}
 	}
 
 	go omxPlay(file)
