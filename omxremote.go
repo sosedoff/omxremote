@@ -228,6 +228,7 @@ func httpHost(c *gin.Context) {
 		"uptime":  "uptime",
 		"storage": "df -m",
 		"memory":  "free -m",
+		"temp":    "/opt/vc/bin/vcgencmd measure_temp | egrep -o '[0-9]*\\.[0-9]*'",
 	}
 
 	lock := &sync.Mutex{}
@@ -239,15 +240,14 @@ func httpHost(c *gin.Context) {
 		go func(key, name string) {
 			defer wg.Done()
 
-			args := strings.Split(name, " ")
-
 			out := bytes.NewBuffer(nil)
-			cmd := exec.Command(args[0], args[1:]...)
+
+			cmd := exec.Command("bash", "-c", name)
 			cmd.Stdout = out
 			cmd.Stderr = out
 
 			if err := cmd.Run(); err != nil {
-				log.Println("Failed to execute command", k, err)
+				log.Println("Failed to execute command", key, err)
 
 				lock.Lock()
 				output[key] = "N/A"
@@ -265,11 +265,12 @@ func httpHost(c *gin.Context) {
 
 	wg.Wait()
 
-	c.JSON(200, map[string]interface{}{
+	c.JSON(200, gin.H{
 		"uptime":  output["uptime"],
 		"os":      output["os"],
 		"storage": parseStorageInfo(output["storage"]),
 		"memory":  parseMemoryInfo(output["memory"]),
+		"temp":    parseTemperature(output["temp"]),
 	})
 }
 

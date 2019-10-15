@@ -51,3 +51,9 @@ func parseMemoryInfo(input string) HostInfo {
 
 	return info
 }
+
+func parseTemperature(input string) float32 {
+	var value float32
+	fmt.Sscanf(input, "%v", &value)
+	return value
+}
