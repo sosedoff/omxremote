@@ -54,7 +54,7 @@ make release
 ```
 
 That will produce a binary that's ready to be transferred and executed on your RPi. 
-In cases if you dont have Make available on your system, you can execute the following commands:
+In cases if you don't have Make available on your system, you can execute the following commands:
 
 ```
 go get
