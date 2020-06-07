@@ -58,7 +58,7 @@ In cases if you don't have Make available on your system, you can execute the fo
 
 ```
 go get
-GOOS=linux GOARCH=arm go build
+GOOS=linux GOARCH=arm GOARM=6 go build
 ```
 
 ## Usage
