@@ -39,7 +39,7 @@ type FileEntry struct {
 
 var (
 	// Regular expression to match all supported video files
-	RegexFormats = regexp.MustCompile(`.(avi|mpg|mov|flv|wmv|asf|mpeg|m4v|divx|mp4|mkv)$`)
+	RegexFormats = regexp.MustCompile(`.(avi|mpg|mov|flv|wmv|asf|mpeg|m4v|divx|mp4|ogm|mkv|mp4)$`)
 
 	// Regular expression to convert filenames to titles
 	RegexBrackets = regexp.MustCompile(`[\(\[\]\)]`)
