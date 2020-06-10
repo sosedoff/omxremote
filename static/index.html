@@ -345,7 +345,9 @@
 
         $(".stop").on("click", function() {
           command("stop");
-          window.location.reload();
+          setTimeout(function() {
+            window.location.reload();
+          }, 100);
         });
 
         $(".action").on("click", function() {
