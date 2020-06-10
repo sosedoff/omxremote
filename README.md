@@ -74,6 +74,12 @@ Usage of omxremote:
   -v  Print version
   -zeroconf
       Enable service advertisement with Zeroconf (default true)
+  -run-on-pause string
+    	Run command when pausing playback
+  -run-on-play string
+    	Run command before starting playback
+  -run-on-stop string
+    	Run command when stopping video
 ```
 
 To start omxremote, run the following command:

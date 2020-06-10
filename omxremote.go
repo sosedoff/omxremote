@@ -69,6 +69,9 @@ var (
 	CurrentFile string         // Currently playing media file name
 	Zeroconf    bool           // Enable Zeroconf discovery
 	Frontend    bool           // Serve frontend app
+	RunOnPlay   string         // Run command when starting playback
+	RunOnStop   string         // Run command when stopping playback
+	RunOnPause  string         // Run command when pausing playback
 	stream      *Stream        // Current stream
 )
 
@@ -84,6 +87,33 @@ func httpBrowse(c *gin.Context) {
 	c.JSON(200, scanPath(path))
 }
 
+func RunOnAction(cmd string) error {
+
+	if cmd == "" {
+		return nil
+	}
+
+	fmt.Println("Running command", cmd);
+	OnAction := exec.Command(
+		cmd,       // path to executable
+	)
+
+	err := OnAction.Start()
+	if err != nil {
+		fmt.Println("error")
+		return err
+	}
+
+	// Wait until child process is finished
+	err = OnAction.Wait()
+	if err != nil {
+		fmt.Fprintln(os.Stdout, "Process exited with error:", err)
+	}
+
+	return nil
+}
+
+
 func httpCommand(c *gin.Context) {
 	val := c.Params.ByName("command")
 
@@ -96,6 +126,13 @@ func httpCommand(c *gin.Context) {
 
 	// Handle requested commmand
 	Command <- val
+
+	if val == "stop" {
+		RunOnAction(RunOnStop)
+	}
+	if val == "pause" {
+		RunOnAction(RunOnPause)
+	}
 
 	c.JSON(200, Response{true, "OK"})
 }
@@ -146,6 +183,7 @@ func httpPlay(c *gin.Context) {
 		}
 	}
 
+	RunOnAction(RunOnPlay)
 	go omxPlay(file)
 
 	c.JSON(200, Response{true, "OK"})
@@ -296,6 +334,9 @@ func init() {
 	flag.BoolVar(&Frontend, "frontend", true, "Enable frontend application")
 	flag.BoolVar(&Zeroconf, "zeroconf", true, "Enable service advertisement with Zeroconf")
 	flag.BoolVar(&printVersion, "v", false, "Print version")
+	flag.StringVar(&RunOnPlay, "run-on-play", "", "Run command before starting playback")
+	flag.StringVar(&RunOnPause, "run-on-pause", "", "Run command when pausing playback")
+	flag.StringVar(&RunOnStop, "run-on-stop", "", "Run command when stopping video")
 	flag.Parse()
 
 	if printVersion {
