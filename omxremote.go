@@ -289,10 +289,6 @@ func terminate(message string, code int) {
 	os.Exit(code)
 }
 
-func usage() {
-	terminate("Usage: omxremote path/to/media/dir", 0)
-}
-
 func init() {
 	var printVersion bool
 
