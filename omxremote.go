@@ -59,6 +59,8 @@ var (
 		"seek_back_fast":    "\x1b\x5b\x42", // Seek -600 second
 		"seek_forward":      "\x1b\x5b\x43", // Seek +30 second
 		"seek_forward_fast": "\x1b\x5b\x41", // Seek +600 seconds
+		"next_audiotrack":   "k",            // select next audio track
+		"prev_audiotrack":   "j",            // select previous audio track
 	}
 
 	MediaPath   string         // Path where all media files are stored

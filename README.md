@@ -170,6 +170,8 @@ Available commands:
 - `seek_back_fast`
 - `seek_forward`
 - `seek_forward_fast`
+- `next_audiotrack`
+- `prev_audiotrack`
 
 ### Troubleshooting
 

@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <title>omxremote</title>
   </head>
@@ -122,7 +122,7 @@
 
     .controls .volume .button {
       position: relative;
-      width: 50%;
+      width: 25%;
       height: 100%;
       float: left;
       text-align: center;
@@ -136,8 +136,8 @@
       border-left: 0px solid #bbb;
     }
 
-    .controls .volume .volume-down {
-      border-right: 1px solid #bbb;
+    .controls .volume .volume-down .next-audio-track .previous-audio-track {
+      border-right: 1px solid #fff;
     }
 
     .controls .main {
@@ -267,6 +267,20 @@
       </div>
       <div class="volume">
         <div class="button action down volume-down" data="volume_down"><i class="fa fa-volume-down"></i></div>
+        <div class="button action down previous-audio-track" data="prev_audiotrack">
+			<span class="fa-stack fa-lg">
+				<i class="fa fa-commenting-o fa-stack-1x" aria-hidden="true"></i>
+				<i class="fa fa-caret-down fa-stack-1x"
+					style="padding-left:0.95em;padding-top:0.95em"></i>
+			</span>
+	</div>
+        <div class="button action up next-audio-track" data="next_audiotrack">
+			<span class="fa-stack fa-lg">
+				<i class="fa fa-commenting-o fa-stack-1x" aria-hidden="true"></i>
+				<i class="fa fa-caret-up fa-stack-1x"
+					style="padding-left:0.8em;padding-top:0.8em;"></i>
+			</span>
+	</div>
         <div class="button action up volume-up" data="volume_up"><i class="fa fa-volume-up"></i></div>
       </div>
     </div>
