@@ -69,6 +69,7 @@ var (
 	CurrentFile string         // Currently playing media file name
 	Zeroconf    bool           // Enable Zeroconf discovery
 	Frontend    bool           // Serve frontend app
+	OmxAddnOpts string         // additional options for omxplayer
 	stream      *Stream        // Current stream
 )
 
@@ -300,6 +301,7 @@ func init() {
 	flag.BoolVar(&Frontend, "frontend", true, "Enable frontend applicaiton")
 	flag.BoolVar(&Zeroconf, "zeroconf", true, "Enable service advertisement with Zeroconf")
 	flag.BoolVar(&printVersion, "v", false, "Print version")
+	flag.StringVar(&OmxAddnOpts, "omxplay-addn-opts", "", "Additional command line options for omxplay")
 	flag.Parse()
 
 	if printVersion {
