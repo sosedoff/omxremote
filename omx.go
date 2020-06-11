@@ -128,6 +128,8 @@ func omxPlay(file string) error {
 
 	omxCleanup()
 
+	RunOnAction(RunOnStop)
+
 	return nil
 }
 
