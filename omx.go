@@ -74,16 +74,15 @@ func omxInfo(file string) (*FileInfo, error) {
 
 // Start omxplayer playback for a given video file. Returns error if start fails.
 func omxPlay(file string) error {
-	Omx = exec.Command(
-		OmxPath,       // path to omxplayer executable
-		"--stats",     // print stats to stdout (buffers, time, etc)
-		"--with-info", // print stats about streams before playback
-		"--refresh",   // adjust framerate/resolution to video
-		"--blank",     // set background to black
-		"--adev",      // audio out device
-		"hdmi",        // using hdmi for audio/video
-		file,          // path to video file
-	)
+
+	addnopts := strings.Split(OmxAddnOpts, " ")
+	addnopts = append(addnopts, "--stats")      // print stats to stdout (buffers, time, etc)
+	addnopts = append(addnopts, "--with-info")  // print stats about streams before playback
+	addnopts = append(addnopts, "--refresh")    // adjust framerate/resolution to video
+	addnopts = append(addnopts, "--blank")      // set background to black
+	addnopts = append(addnopts, file)
+
+	Omx = exec.Command(OmxPath, addnopts...)
 
 	// Grab child process STDIN
 	stdin, err := Omx.StdinPipe()

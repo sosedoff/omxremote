@@ -71,6 +71,8 @@ Usage of omxremote:
       Enable frontend applicaiton (default true)
   -media string
       Path to media files (default "./")
+  -omxplay-addn-opts string
+    	Additional command line options for omxplay
   -v  Print version
   -zeroconf
       Enable service advertisement with Zeroconf (default true)
